@@ -1,0 +1,80 @@
+/* Tailwind Base Styles */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* DaisyUI Customizations */
+:root {
+  /* Font Variables */
+  --font-sans: 'Roboto', sans-serif;
+  --font-heading: 'Montserrat', sans-serif;
+
+  /* Theme Colors (Green Palette) */
+  --color-primary: #4caf50; /* Bright Green */
+  --color-secondary: #8bc34a; /* Light Green */
+  --color-neutral: #2c6b2f; /* Dark Green */
+  --color-background: #f1f8e9; /* Light Greenish Background */
+  --color-accent: #008d54; /* Forest Green */
+}
+
+/* Base Styling */
+body {
+  @apply bg-background text-neutral font-sans;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+/* Global DaisyUI Button Overrides */
+.btn {
+  @apply rounded-lg font-medium transition-all duration-300;
+}
+
+.btn-primary {
+  @apply bg-primary text-white hover:bg-accent;
+}
+
+.btn-secondary {
+  @apply bg-secondary text-neutral hover:bg-primary;
+}
+
+.btn-accent {
+  @apply bg-accent text-white hover:bg-secondary;
+}
+
+/* Links */
+a {
+  @apply text-primary transition-all duration-200;
+}
+
+a:hover {
+  @apply text-white;
+}
+
+/* Headings */
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: var(--font-heading); /* Use heading font */
+  margin: 0;
+}
+
+/* Images */
+img {
+  @apply max-w-full block rounded-lg;
+}
+
+/* Utility Classes */
+.container {
+  @apply max-w-7xl mx-auto px-4 sm:px-6 lg:px-8;
+}
+
+/* Responsive Adjustments */
+@media (max-width: 768px) {
+  .container {
+    @apply px-2;
+  }
+}
