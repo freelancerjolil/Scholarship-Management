@@ -6,15 +6,19 @@
 /* DaisyUI Customizations */
 :root {
   /* Font Variables */
-  --font-sans: 'Roboto', sans-serif;
-  --font-heading: 'Montserrat', sans-serif;
+  --font-sans: 'Inter', sans-serif;
+  --font-heading: 'Poppins', sans-serif;
 
-  /* Theme Colors (Green Palette) */
-  --color-primary: #4caf50; /* Bright Green */
-  --color-secondary: #8bc34a; /* Light Green */
-  --color-neutral: #2c6b2f; /* Dark Green */
-  --color-background: #f1f8e9; /* Light Greenish Background */
-  --color-accent: #008d54; /* Forest Green */
+  /* Theme Colors */
+  --color-primary: #0057d9; /* Larksuite-style blue */
+  --color-secondary: #fec900; /* Bright Yellow */
+  --color-neutral: #333333; /* Dark Neutral */
+  --color-background: #f5f7fa; /* Light Off-White */
+  --color-accent: #1890ff; /* Light Blue for Highlights */
+  --color-info: #36cfc9; /* Teal for Info */
+  --color-success: #52c41a; /* Green for Success */
+  --color-warning: #faad14; /* Orange for Warnings */
+  --color-error: #ff4d4f; /* Red for Errors */
 }
 
 /* Base Styling */
@@ -23,6 +27,26 @@ body {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
+}
+
+/* Animations */
+.menu-enter {
+  transform: translateY(-10%);
+  opacity: 0;
+}
+.menu-enter-active {
+  transform: translateY(0);
+  opacity: 1;
+  transition: all 0.3s ease;
+}
+.menu-exit {
+  transform: translateY(0);
+  opacity: 1;
+}
+.menu-exit-active {
+  transform: translateY(-10%);
+  opacity: 0;
+  transition: all 0.3s ease;
 }
 
 /* Global DaisyUI Button Overrides */
@@ -42,14 +66,19 @@ body {
   @apply bg-accent text-white hover:bg-secondary;
 }
 
-/* Links */
-a {
-  @apply text-primary transition-all duration-200;
+.btn-success {
+  @apply bg-success text-white hover:bg-primary;
 }
 
-a:hover {
-  @apply text-white;
+.btn-warning {
+  @apply bg-warning text-white hover:bg-accent;
 }
+
+.btn-error {
+  @apply bg-error text-white hover:bg-primary;
+}
+
+/* Links */
 
 /* Headings */
 h1,
@@ -58,18 +87,14 @@ h3,
 h4,
 h5,
 h6 {
-  font-family: var(--font-heading); /* Use heading font */
+  font-family: var(--font-heading);
   margin: 0;
+  color: var(--color-neutral);
 }
 
 /* Images */
 img {
-  @apply max-w-full block rounded-lg;
-}
-
-/* Utility Classes */
-.container {
-  @apply max-w-7xl mx-auto px-4 sm:px-6 lg:px-8;
+  @apply max-w-full block rounded-lg shadow-sm;
 }
 
 /* Responsive Adjustments */

@@ -5,16 +5,22 @@ import Navbar from '../components/Shared/Navbar/Navbar';
 const Main = () => {
   const location = useLocation();
 
+  // Check if the current path includes 'login' or 'signup'
   const noHeaderFooter =
     location.pathname.includes('login') || location.pathname.includes('signup');
 
   return (
     <div>
-      {noHeaderFooter || <Navbar></Navbar>}
-      <div className="pt-24 min-h-[calc(100vh-68px)]">
+      {/* Conditionally render Navbar if the path is not 'login' or 'signup' */}
+      {!noHeaderFooter && <Navbar />}
+
+      <div className="min-h-[calc(100vh-68px)]">
+        {/* Render the page content inside Outlet */}
         <Outlet></Outlet>
       </div>
-      {noHeaderFooter || <Footer></Footer>}
+
+      {/* Conditionally render Footer if the path is not 'login' or 'signup' */}
+      {!noHeaderFooter && <Footer />}
     </div>
   );
 };

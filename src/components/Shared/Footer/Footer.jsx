@@ -1,5 +1,6 @@
 import { FaFacebook, FaLinkedin, FaTwitter } from 'react-icons/fa'; // Import icons
 import { Link } from 'react-router-dom'; // Import Link for internal routing
+import logo from '../../../assets/img/logo-white.png';
 
 const Footer = () => {
   return (
@@ -12,7 +13,7 @@ const Footer = () => {
               <Link to="/">
                 <img
                   className="w-auto h-7"
-                  src="https://your-logo-url.com"
+                  src={logo}
                   alt="Scholarship Management System Logo - SMS"
                 />
               </Link>

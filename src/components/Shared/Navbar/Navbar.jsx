@@ -1,111 +1,107 @@
-import { useState } from 'react';
-import { AiOutlineMenu } from 'react-icons/ai';
+import { useEffect, useState } from 'react';
+import { AiOutlineClose, AiOutlineMenu } from 'react-icons/ai';
 import { Link, NavLink } from 'react-router-dom';
-import logo from '../../../assets/img/logo.png';
+import logo from '../../../assets/img/logo-green.png';
 import avatarImg from '../../../assets/img/placeholder.jpg';
 import useAuth from '../../../hooks/useAuth';
 
 const Navbar = () => {
-  const { user, logOut } = useAuth();
-  const [isOpen, setIsOpen] = useState(false);
+  const { user, logOut } = useAuth() || {};
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
 
-  const userRole = user?.role;
-
-  const toggleMenu = () => setIsOpen(!isOpen);
+  const toggleMenu = () => setIsMenuOpen(!isMenuOpen);
 
   const handleLogout = async () => {
     try {
       await logOut();
-      setIsOpen(false); // Close the menu after logout
+      setIsMenuOpen(false);
     } catch (error) {
       console.error('Logout failed:', error);
     }
   };
 
+  useEffect(() => {
+    const handleOutsideClick = (e) => {
+      if (isMenuOpen && !e.target.closest('.menu-container')) {
+        setIsMenuOpen(false);
+      }
+    };
+    document.addEventListener('mousedown', handleOutsideClick);
+    return () => document.removeEventListener('mousedown', handleOutsideClick);
+  }, [isMenuOpen]);
+
   return (
-    <nav className="fixed top-0 left-0 bg-opacity-30 w-full bg-white shadow-sm z-10">
-      <div className="container mx-auto px-6 py-4 flex items-center justify-between">
+    <nav className="sticky w-full top-0 z-10 bg-opacity-30 backdrop-blur-lg bg-gradient-to-r from-white/30 to-gray-100/30 border-b border-gray-200">
+      <div className="container mx-auto px-4 py-3 flex justify-between items-center">
         {/* Logo */}
         <Link to="/" className="flex items-center">
-          <img src={logo} alt="Logo" className="h-12" />
+          <img src={logo} alt="Logo" className="h-10" />
         </Link>
 
-        {/* Desktop Menu */}
-        <div className="hidden md:flex items-center space-x-6 flex-grow justify-center">
-          <NavLink
+        {/* Navigation Links */}
+        <div className="hidden md:flex space-x-8 text-neutral font-heading">
+          <Link
             to="/"
             className={({ isActive }) =>
               isActive
-                ? 'text-primary font-bold text-lg'
-                : 'text-neutral font-semibold hover:text-secondary text-lg'
+                ? 'text-primary border-b-2 border-primary bg-gray-100'
+                : 'hover:text-primary'
             }
           >
             Home
-          </NavLink>
-          <NavLink
-            to="/all-scholarships"
+          </Link>
+          <Link
+            to="/scholarships"
             className={({ isActive }) =>
               isActive
-                ? 'text-primary font-bold text-lg'
-                : 'text-neutral font-semibold hover:text-secondary text-lg'
+                ? 'text-primary border-b-2 border-primary bg-gray-100'
+                : 'hover:text-primary'
             }
           >
             All Scholarships
-          </NavLink>
-          {user && userRole === 'user' && (
-            <NavLink
-              to="/user-dashboard"
-              className={({ isActive }) =>
-                isActive
-                  ? 'text-primary font-bold text-lg'
-                  : 'text-neutral font-semibold hover:text-secondary text-lg'
-              }
-            >
-              User Dashboard
-            </NavLink>
-          )}
-          {user && userRole === 'admin' && (
-            <NavLink
-              to="/admin-dashboard"
-              className={({ isActive }) =>
-                isActive
-                  ? 'text-primary font-bold text-lg'
-                  : 'text-neutral font-semibold hover:text-secondary text-lg'
-              }
-            >
-              Admin Dashboard
-            </NavLink>
-          )}
+          </Link>
+          {/* {user && ( */}
+          <Link
+            to="/dashboard"
+            className={({ isActive }) =>
+              isActive
+                ? 'text-primary border-b-2 border-primary bg-gray-100'
+                : 'hover:text-primary'
+            }
+          >
+            Dashboard
+          </Link>
+          {/* )} */}
         </div>
 
-        {/* Login/Signup and Avatar */}
+        {/* User Profile or Login/Sign-up */}
         <div className="hidden md:flex items-center space-x-4">
           {user ? (
             <>
               <button
                 onClick={handleLogout}
-                className="btn btn-primary text-white rounded-lg"
+                className="px-4 py-2 bg-primary text-white rounded-lg hover:bg-accent"
               >
-                Log-Out
+                Log Out
               </button>
+
               <img
-                src={user.photoURL || avatarImg}
-                alt="Profile"
-                className="rounded-full h-10 w-10"
-                referrerPolicy="no-referrer"
+                src={user?.photoURL || avatarImg}
+                alt={user?.displayName || 'User Avatar'}
+                className="h-10 w-10 rounded-full border border-neutral"
               />
             </>
           ) : (
             <>
               <Link
                 to="/login"
-                className="btn btn-outline border  text-primary  rounded-lg"
+                className="px-4 py-2 border border-primary text-primary rounded-lg hover:bg-primary hover:text-white"
               >
                 Login
               </Link>
               <Link
                 to="/signup"
-                className="btn btn-primary text-white rounded-lg"
+                className="px-4 py-2 bg-primary text-white rounded-lg hover:bg-accent"
               >
                 Sign Up
               </Link>
@@ -113,71 +109,64 @@ const Navbar = () => {
           )}
         </div>
 
-        {/* Mobile Menu Toggle */}
+        {/* Hamburger Menu Button */}
         <button
           onClick={toggleMenu}
-          className="md:hidden text-2xl text-neutral-600"
+          className="md:hidden text-2xl text-neutral focus:outline-none"
+          aria-expanded={isMenuOpen}
+          aria-label="Toggle menu"
         >
-          <AiOutlineMenu />
+          {isMenuOpen ? <AiOutlineClose /> : <AiOutlineMenu />}
         </button>
       </div>
 
       {/* Mobile Menu */}
-      {isOpen && (
-        <div className="md:hidden bg-white shadow-md">
-          <div className="p-4 flex flex-col space-y-4">
+      {isMenuOpen && (
+        <div className="menu-container md:hidden bg-white shadow-md">
+          <div className="p-4 space-y-4 text-neutral font-heading">
             <NavLink
               to="/"
-              onClick={() => setIsOpen(false)}
-              className="text-lg font-semibold hover:bg-neutral-100 p-2"
+              className="block px-4 py-2 hover:text-primary"
+              onClick={() => setIsMenuOpen(false)}
             >
               Home
             </NavLink>
             <NavLink
               to="/all-scholarships"
-              onClick={() => setIsOpen(false)}
-              className="text-lg font-semibold hover:bg-neutral-100 p-2"
+              className="block px-4 py-2 hover:text-primary"
+              onClick={() => setIsMenuOpen(false)}
             >
-              All Scholarships
+              Scholarships
             </NavLink>
-            {user && userRole === 'user' && (
+            {user && (
               <NavLink
-                to="/user-dashboard"
-                onClick={() => setIsOpen(false)}
-                className="text-lg font-semibold hover:bg-neutral-100 p-2"
+                to="/dashboard"
+                className="block px-4 py-2 hover:text-primary"
+                onClick={() => setIsMenuOpen(false)}
               >
-                User Dashboard
-              </NavLink>
-            )}
-            {user && userRole === 'admin' && (
-              <NavLink
-                to="/admin-dashboard"
-                onClick={() => setIsOpen(false)}
-                className="text-lg font-semibold hover:bg-neutral-100 p-2"
-              >
-                Admin Dashboard
+                Dashboard
               </NavLink>
             )}
             {user ? (
               <button
                 onClick={handleLogout}
-                className="btn btn-error text-white w-full mt-4"
+                className="w-full text-left px-4 py-2 bg-primary text-white rounded-lg hover:bg-accent"
               >
-                Log-Out
+                Log Out
               </button>
             ) : (
               <>
                 <Link
                   to="/login"
-                  onClick={() => setIsOpen(false)}
-                  className="btn btn-secondary text-white w-full mt-4"
+                  className="block px-4 py-2 border border-primary text-primary rounded-lg hover:bg-primary hover:text-white"
+                  onClick={() => setIsMenuOpen(false)}
                 >
                   Login
                 </Link>
                 <Link
                   to="/signup"
-                  onClick={() => setIsOpen(false)}
-                  className="btn btn-primary text-white w-full mt-4"
+                  className="block px-4 py-2 bg-primary text-white rounded-lg hover:bg-accent"
+                  onClick={() => setIsMenuOpen(false)}
                 >
                   Sign Up
                 </Link>
