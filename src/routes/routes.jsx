@@ -54,11 +54,11 @@ export const router = createBrowserRouter([
     children: [
       // User Dashboard Routes
       {
-        path: 'user-dashboard/my-profile',
+        path: '/dashboard/myProfile',
         element: <MyProfile></MyProfile>,
       },
       {
-        path: 'user-dashboard/my-applications',
+        path: '/dashboard/appliedScholarships',
         element: <MyApplications></MyApplications>,
       },
       {

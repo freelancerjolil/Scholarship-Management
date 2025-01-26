@@ -2,7 +2,6 @@ import {
   FaCheckCircle,
   FaClipboardList,
   FaEnvelope,
-  FaHistory,
   FaHome,
   FaPlusCircle,
   FaUserFriends,
@@ -10,9 +9,11 @@ import {
 } from 'react-icons/fa';
 import { NavLink, Outlet } from 'react-router-dom';
 import useAdmin from '../hooks/useAdmin';
+import useModerator from '../hooks/useModerator';
 
 const Dashboard = () => {
   const [isAdmin] = useAdmin();
+  const [isModerator] = useModerator();
 
   return (
     <div className="flex">
@@ -25,7 +26,7 @@ const Dashboard = () => {
               <li>
                 <NavLink to="/dashboard/adminHome">
                   <FaHome />
-                  Admin Home
+                  Admin Profile
                 </NavLink>
               </li>
               <li>
@@ -37,7 +38,7 @@ const Dashboard = () => {
               <li>
                 <NavLink to="/dashboard/manageScholarships">
                   <FaClipboardList />
-                  Manage Scholarships
+                  Manage Applied Application
                 </NavLink>
               </li>
               <li>
@@ -46,32 +47,66 @@ const Dashboard = () => {
                   Manage Users
                 </NavLink>
               </li>
+              <li>
+                <NavLink to="/dashboard/manageReview">
+                  <FaUserFriends />
+                  Manage Review
+                </NavLink>
+              </li>
+            </>
+          ) : isModerator ? (
+            <>
+              {/* Moderator Links */}
+              <li>
+                <NavLink to="/dashboard/myProfile">
+                  <FaHome />
+                  My Profile
+                </NavLink>
+              </li>
+              <li>
+                <NavLink to="/dashboard/manageScholarships">
+                  <FaClipboardList />
+                  Manage Scholarships
+                </NavLink>
+              </li>
+              <li>
+                <NavLink to="/dashboard/allReviews">
+                  <FaClipboardList />
+                  All reviews
+                </NavLink>
+              </li>
+              <li>
+                <NavLink to="/dashboard/allAppliedScholarship">
+                  <FaClipboardList />
+                  All applied Scholarship
+                </NavLink>
+              </li>
+              <li>
+                <NavLink to="/dashboard/addScholarship">
+                  <FaClipboardList />
+                  Add Scholarship
+                </NavLink>
+              </li>
             </>
           ) : (
             <>
               {/* User Links */}
               <li>
-                <NavLink to="/dashboard/userHome">
+                <NavLink to="/dashboard/myProfile">
                   <FaHome />
-                  User Home
+                  My Profile
                 </NavLink>
               </li>
               <li>
-                <NavLink to="/dashboard/appliedScholarships">
+                <NavLink to="/dashboard/myApplication">
                   <FaCheckCircle />
-                  Applied Scholarships
+                  My Application
                 </NavLink>
               </li>
               <li>
-                <NavLink to="/dashboard/review">
+                <NavLink to="/dashboard/myReviews">
                   <FaUserGraduate />
-                  Write a Review
-                </NavLink>
-              </li>
-              <li>
-                <NavLink to="/dashboard/paymentHistory">
-                  <FaHistory />
-                  Payment History
+                  My Reviews
                 </NavLink>
               </li>
             </>

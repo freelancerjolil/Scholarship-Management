@@ -4,31 +4,37 @@ import { FcGoogle } from 'react-icons/fc';
 import { HiEye, HiEyeOff } from 'react-icons/hi'; // Password visibility icons
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
+import useAxiosPublic from '../../hooks/useAxiosPublic';
 import { AuthContext } from '../../providers/AuthProvider';
 
 const Login = () => {
-  const { signIn, googleSignIn, setUser } = useContext(AuthContext);
+  const { signIn, googleSignIn } = useContext(AuthContext);
   const location = useLocation();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [showPassword, setShowPassword] = useState(false); // Toggle password visibility
+  const [showPassword, setShowPassword] = useState(false);
   const navigate = useNavigate();
   const emailRef = useRef();
+  const axiosPublic = useAxiosPublic();
 
   const from = location?.state?.from?.pathname || '/';
 
   const handleGoogleLogin = () => {
-    googleSignIn()
-      .then((result) => {
-        const user = result.user;
-        setUser(user); // Set the user in context
-        toast.success(`Welcome, ${user.displayName || 'User'}!`);
+    googleSignIn().then((result) => {
+      console.log(result.user);
+      const userInfo = {
+        email: result.user?.email,
+        name: result.user?.displayName,
+        photoUrl: result.user?.photoURL,
+        role: 'user',
+      };
+
+      console.log(userInfo);
+      axiosPublic.post('/users', userInfo).then((res) => {
+        console.log(res.data);
         navigate(location?.state?.from?.pathname || '/');
-      })
-      .catch((error) => {
-        console.error('Google Sign-In Error:', error.message);
-        toast.error('Google Sign-In failed. Please try again.');
       });
+    });
   };
 
   const handleLogin = (event) => {
