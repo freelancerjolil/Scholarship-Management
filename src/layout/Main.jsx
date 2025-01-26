@@ -19,7 +19,6 @@ const Main = () => {
         <Outlet></Outlet>
       </div>
 
-      {/* Conditionally render Footer if the path is not 'login' or 'signup' */}
       {!noHeaderFooter && <Footer />}
     </div>
   );

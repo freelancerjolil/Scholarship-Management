@@ -49,7 +49,7 @@ const AuthProvider = ({ children }) => {
     setLoading(true);
     return signInWithPopup(auth, googleProvider)
       .then((result) => {
-        setUser(result.user); // Update user state explicitly after Google sign-in
+        setUser(result.user);
         return result;
       })
       .catch(handleAuthError)
@@ -79,6 +79,7 @@ const AuthProvider = ({ children }) => {
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
       setUser(currentUser); // Set user in context
+      console.log(currentUser);
       if (currentUser) {
         const userInfo = { email: currentUser.email };
         axiosPublic

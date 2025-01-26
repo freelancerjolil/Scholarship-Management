@@ -49,14 +49,14 @@ const Login = () => {
     setShowPassword((prevState) => !prevState);
 
   return (
-    <div className="h-full bg-[#F7F8FA] flex justify-center items-center py-4 lg:py-10">
+    <div className="h-full bg-[#F4F7FC] flex justify-center items-center py-6 lg:py-12">
       <Helmet>
         <title>Edu-Track | Login</title>
       </Helmet>
-      <div className="card bg-white shadow-sm w-full max-w-md p-8 rounded-lg">
-        <div className="text-center mb-6">
-          <h2 className="text-2xl font-semibold mt-4">
-            Welcome To Edu-Track Scholarshop Portal
+      <div className="card bg-white shadow-lg w-full max-w-md p-10 rounded-xl border border-gray-300">
+        <div className="text-center mb-8">
+          <h2 className="text-3xl font-bold text-[#134479]">
+            Welcome To Edu-Track Scholarship Portal
           </h2>
         </div>
 
@@ -64,7 +64,7 @@ const Login = () => {
         <div className="flex justify-center mb-6">
           <button
             onClick={handleGoogleLogin}
-            className="btn w-full bg-base-100 border hover:bg-white  flex items-center justify-center py-2"
+            className="btn w-full bg-[#4285F4] hover:bg-[#357AE8] text-white flex items-center justify-center py-3 rounded-lg transition duration-300"
           >
             <FcGoogle className="mr-2" size={20} />
             Sign In with Google
@@ -72,17 +72,19 @@ const Login = () => {
         </div>
 
         {/* Separator */}
-        <div className="flex items-center my-4">
+        <div className="flex items-center my-6">
           <hr className="w-full border-t border-gray-300" />
-          <span className="mx-2 text-gray-500">or </span>
+          <span className="mx-2 text-gray-500">or</span>
           <hr className="w-full border-t border-gray-300" />
         </div>
 
         {/* Login Form */}
-        <form onSubmit={handleLogin} className="space-y-4">
+        <form onSubmit={handleLogin} className="space-y-6">
           <div className="form-control">
-            <label className="label" htmlFor="email">
-              <span className="label-text">Email Address</span>
+            <label className="label text-[#134479]" htmlFor="email">
+              <span className="label-text text-lg font-medium">
+                Email Address
+              </span>
             </label>
             <input
               id="email"
@@ -92,13 +94,13 @@ const Login = () => {
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               placeholder="Enter your email"
-              className="input input-bordered w-full"
+              className="input input-bordered w-full py-3 px-4 rounded-lg text-lg"
               required
             />
           </div>
           <div className="form-control">
-            <label className="label" htmlFor="password">
-              <span className="label-text">Password</span>
+            <label className="label text-[#134479]" htmlFor="password">
+              <span className="label-text text-lg font-medium">Password</span>
             </label>
             <div className="relative">
               <input
@@ -108,12 +110,12 @@ const Login = () => {
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 placeholder="Enter your password"
-                className="input input-bordered w-full"
+                className="input input-bordered w-full py-3 px-4 rounded-lg text-lg"
                 required
               />
               <span
                 onClick={togglePasswordVisibility}
-                className="absolute mt-2 right-3 top-[33%] transform -translate-y-1/2 cursor-pointer"
+                className="absolute right-4 top-1/2 transform -translate-y-1/2 cursor-pointer"
               >
                 {showPassword ? <HiEyeOff size={24} /> : <HiEye size={24} />}
               </span>
@@ -123,19 +125,24 @@ const Login = () => {
           <div className="form-control">
             <button
               type="submit"
-              className="btn bg-[#134479] text-white hover:bg-[#0e62bb] w-full"
+              className="btn bg-[#134479] text-white hover:bg-[#0e62bb] w-full py-3 rounded-lg transition duration-300"
             >
               Log In
             </button>
           </div>
         </form>
 
-        <p className="text-center mt-4">
-          Don't have an account?{' '}
-          <Link className="text-[#134479] hover:underline" to="/signup">
-            Register
-          </Link>
-        </p>
+        <div className="text-center mt-6">
+          <p className="text-sm text-gray-600">
+            Don't have an account?{' '}
+            <Link
+              className="text-[#134479] hover:underline font-medium"
+              to="/signup"
+            >
+              Register
+            </Link>
+          </p>
+        </div>
       </div>
     </div>
   );

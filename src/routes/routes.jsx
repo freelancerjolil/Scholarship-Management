@@ -7,7 +7,14 @@ import AllScholarships from '../pages/AllScholarships/AllScholarships';
 import ScholarshipDetails from '../pages/AllScholarships/ScholarshipDetails';
 import Login from '../pages/Auth/Login';
 import Signup from '../pages/Auth/Signup';
+import AddScholarship from '../pages/Dashboard/AddScholarship.jsx/AddScholarship';
+import ManageUsers from '../pages/Dashboard/AdminDashboard/ManageUsers';
+import ContactUs from '../pages/Dashboard/ContactUs';
+import MyApplications from '../pages/Dashboard/UserDashboard/MyApplications';
+import MyProfile from '../pages/Dashboard/UserDashboard/MyProfile';
+import MyReviews from '../pages/Dashboard/UserDashboard/MyReviews';
 import Home from '../pages/Home/Home';
+import Payments from '../pages/Payments/Payments';
 
 export const router = createBrowserRouter([
   {
@@ -27,6 +34,10 @@ export const router = createBrowserRouter([
         path: '/scholarship/:id',
         element: <ScholarshipDetails></ScholarshipDetails>,
       },
+      {
+        path: 'payment',
+        element: <Payments></Payments>,
+      },
     ],
   },
   {
@@ -40,6 +51,70 @@ export const router = createBrowserRouter([
   {
     path: 'dashboard',
     element: <Dashboard></Dashboard>,
+    children: [
+      // User Dashboard Routes
+      {
+        path: 'user-dashboard/my-profile',
+        element: <MyProfile></MyProfile>,
+      },
+      {
+        path: 'user-dashboard/my-applications',
+        element: <MyApplications></MyApplications>,
+      },
+      {
+        path: 'user-dashboard/my-reviews',
+        element: <MyReviews></MyReviews>,
+      },
+      {
+        path: 'user-dashboard/my-reviews',
+        element: <MyReviews></MyReviews>,
+      },
+
+      // Moderator Dashboard Routes
+      {
+        path: '/dashboard/contact',
+        element: <ContactUs></ContactUs>,
+      },
+      {
+        path: '/dashboard/addScholarship',
+        element: <AddScholarship></AddScholarship>,
+      },
+      // {
+      //   path: 'moderator-dashboard/all-reviews',
+      //   element: <AllReviews></AllReviews>,
+      // },
+      // {
+      //   path: 'moderator-dashboard/applied-applications',
+      //   element: <AppliedApplications></AppliedApplications>,
+      // },
+      // {
+      //   path: 'moderator-dashboard/add-scholarship',
+      //   element: <AddScholarshipModerator></AddScholarshipModerator>,
+      // },
+
+      // // Admin Dashboard Routes
+      {
+        path: '/dashboard/users',
+        element: <ManageUsers></ManageUsers>,
+      },
+      // { path: 'admin-dashboard/analytics', element: <Analytics></Analytics> },
+      // {
+      //   path: 'admin-dashboard/add-scholarship',
+      //   element: <AddScholarshipAdmin></AddScholarshipAdmin>,
+      // },
+      // {
+      //   path: 'admin-dashboard/manage-scholarships',
+      //   element: <ManageScholarshipsAdmin></ManageScholarshipsAdmin>,
+      // },
+      // {
+      //   path: 'admin-dashboard/manage-reviews',
+      //   element: <ManageReviews></ManageReviews>,
+      // },
+      // {
+      //   path: 'admin-dashboard/manage-applications',
+      //   element: <ManageApplications></ManageApplications>,
+      // },
+    ],
   },
 ]);
 

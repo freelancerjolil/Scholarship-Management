@@ -20,6 +20,11 @@ const Navbar = () => {
     }
   };
 
+  const getActiveLinkClass = ({ isActive }) =>
+    isActive
+      ? 'text-primary border-b-2 border-primary bg-gray-100'
+      : 'hover:text-primary';
+
   useEffect(() => {
     const handleOutsideClick = (e) => {
       if (isMenuOpen && !e.target.closest('.menu-container')) {
@@ -31,7 +36,7 @@ const Navbar = () => {
   }, [isMenuOpen]);
 
   return (
-    <nav className="sticky w-full top-0 z-10 bg-opacity-30 backdrop-blur-lg bg-gradient-to-r from-white/30 to-gray-100/30 border-b border-gray-200">
+    <nav className="sticky top-0 w-full z-10 bg-opacity-30 backdrop-blur-lg bg-gradient-to-r from-white/30 to-gray-100/30 border-b border-gray-200">
       <div className="container mx-auto px-4 py-3 flex justify-between items-center">
         {/* Logo */}
         <Link to="/" className="flex items-center">
@@ -40,38 +45,17 @@ const Navbar = () => {
 
         {/* Navigation Links */}
         <div className="hidden md:flex space-x-8 text-neutral font-heading">
-          <Link
-            to="/"
-            className={({ isActive }) =>
-              isActive
-                ? 'text-primary border-b-2 border-primary bg-gray-100'
-                : 'hover:text-primary'
-            }
-          >
+          <NavLink to="/" className={getActiveLinkClass}>
             Home
-          </Link>
-          <Link
-            to="/scholarships"
-            className={({ isActive }) =>
-              isActive
-                ? 'text-primary border-b-2 border-primary bg-gray-100'
-                : 'hover:text-primary'
-            }
-          >
+          </NavLink>
+          <NavLink to="/scholarships" className={getActiveLinkClass}>
             All Scholarships
-          </Link>
-          {/* {user && ( */}
-          <Link
-            to="/dashboard"
-            className={({ isActive }) =>
-              isActive
-                ? 'text-primary border-b-2 border-primary bg-gray-100'
-                : 'hover:text-primary'
-            }
-          >
-            Dashboard
-          </Link>
-          {/* )} */}
+          </NavLink>
+          {user && (
+            <NavLink to="/dashboard" className={getActiveLinkClass}>
+              Dashboard
+            </NavLink>
+          )}
         </div>
 
         {/* User Profile or Login/Sign-up */}
@@ -88,7 +72,8 @@ const Navbar = () => {
               <img
                 src={user?.photoURL || avatarImg}
                 alt={user?.displayName || 'User Avatar'}
-                className="h-10 w-10 rounded-full border border-neutral"
+                className="h-10 w-10 rounded-full border border-neutral cursor-pointer"
+                onClick={toggleMenu} // Toggle menu when avatar is clicked
               />
             </>
           ) : (
@@ -110,14 +95,25 @@ const Navbar = () => {
         </div>
 
         {/* Hamburger Menu Button */}
-        <button
-          onClick={toggleMenu}
-          className="md:hidden text-2xl text-neutral focus:outline-none"
-          aria-expanded={isMenuOpen}
-          aria-label="Toggle menu"
-        >
-          {isMenuOpen ? <AiOutlineClose /> : <AiOutlineMenu />}
-        </button>
+        <div className="md:hidden flex items-center">
+          {!user ? (
+            <button
+              onClick={toggleMenu}
+              className="text-2xl text-neutral focus:outline-none"
+              aria-expanded={isMenuOpen}
+              aria-label="Toggle menu"
+            >
+              {isMenuOpen ? <AiOutlineClose /> : <AiOutlineMenu />}
+            </button>
+          ) : (
+            <img
+              src={user?.photoURL || avatarImg}
+              alt={user?.displayName || 'User Avatar'}
+              className="h-10 w-10 rounded-full border border-neutral cursor-pointer"
+              onClick={toggleMenu} // Open menu when avatar is clicked
+            />
+          )}
+        </div>
       </div>
 
       {/* Mobile Menu */}
@@ -132,7 +128,7 @@ const Navbar = () => {
               Home
             </NavLink>
             <NavLink
-              to="/all-scholarships"
+              to="/scholarships"
               className="block px-4 py-2 hover:text-primary"
               onClick={() => setIsMenuOpen(false)}
             >

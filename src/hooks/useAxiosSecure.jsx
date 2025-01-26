@@ -3,14 +3,15 @@ import { useNavigate } from 'react-router-dom';
 import useAuth from './useAuth';
 
 const axiosSecure = axios.create({
-  baseURL: 'http://localhost:5000',
+  baseURL: import.meta.env.VITE_API_URL,
+  withCredentials: true,
 });
+
 const useAxiosSecure = () => {
   const navigate = useNavigate();
   const { logOut } = useAuth();
 
-  // request interceptor to add authorization header for every secure call to teh api
-  axiosSecure.interceptorr.request.use(
+  axiosSecure.interceptors.request.use(
     function (config) {
       const token = localStorage.getItem('access-token');
       // console.log('request stopped by interceptors', token)
@@ -23,7 +24,6 @@ const useAxiosSecure = () => {
     }
   );
 
-  // intercepts 401 and 403 status
   axiosSecure.interceptors.response.use(
     function (response) {
       return response;

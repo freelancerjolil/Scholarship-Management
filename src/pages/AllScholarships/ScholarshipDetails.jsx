@@ -1,6 +1,6 @@
 import React from 'react';
 import { FaStar } from 'react-icons/fa';
-import { useNavigate, useParams } from 'react-router-dom';
+import { Link, useNavigate, useParams } from 'react-router-dom';
 import useScholarships from '../../hooks/useScholarships';
 
 const ScholarshipDetails = () => {
@@ -118,12 +118,14 @@ const ScholarshipDetails = () => {
 
           {/* Apply Scholarship Button */}
           <div className="mt-8">
-            <button
-              onClick={handleApplyScholarship}
-              className="w-full py-3 bg-gradient-to-r from-pink-500 to-pink-600 text-white text-lg font-semibold rounded-lg shadow hover:from-pink-600 hover:to-pink-700 transition-all"
-            >
-              Apply for Scholarship
-            </button>
+            <Link to="/payment">
+              <button
+                onClick={handleApplyScholarship}
+                className="w-full py-3 bg-gradient-to-r from-pink-500 to-pink-600 text-white text-lg font-semibold rounded-lg shadow hover:from-pink-600 hover:to-pink-700 transition-all"
+              >
+                Apply for Scholarship
+              </button>
+            </Link>
           </div>
         </>
       ) : (

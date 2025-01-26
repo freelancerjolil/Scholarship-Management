@@ -12,8 +12,8 @@ const Banner = () => {
         showThumbs={false}
         autoPlay
         infiniteLoop
-        interval={4000}
-        transitionTime={500}
+        interval={3000}
+        transitionTime={600}
         showStatus={false}
       >
         {/* Slide 1 */}

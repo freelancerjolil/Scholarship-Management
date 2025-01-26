@@ -1,186 +1,196 @@
 import { useContext, useState } from 'react';
 import { Helmet } from 'react-helmet-async';
-import { FaEye, FaEyeSlash } from 'react-icons/fa';
+import { useForm } from 'react-hook-form';
+import { HiEye, HiEyeOff } from 'react-icons/hi';
 import { Link, useNavigate } from 'react-router-dom';
-import { toast } from 'react-toastify';
+import Swal from 'sweetalert2';
+import useAxiosPublic from '../../hooks/useAxiosPublic';
 import { AuthContext } from '../../providers/AuthProvider';
+import SocialLogin from './SocialLogin';
 
-const Signup = () => {
-  const { createUser, setUser, updateUserProfile } = useContext(AuthContext);
-  const [name, setName] = useState('');
-  const [email, setEmail] = useState('');
-  const [photo, setPhoto] = useState('');
-  const [password, setPassword] = useState('');
-  const [error, setError] = useState('');
+const SignUp = () => {
+  const axiosPublic = useAxiosPublic();
+  const { createUser, updateUserProfile } = useContext(AuthContext);
+  const {
+    register,
+    handleSubmit,
+    reset,
+    formState: { errors },
+  } = useForm();
+  const Navigate = useNavigate();
   const [showPassword, setShowPassword] = useState(false);
-  const [loading, setLoading] = useState(false);
-  const navigate = useNavigate();
 
-  // Password validation function
-  const validatePassword = (password) => {
-    const passwordValidation = /^(?=.*[a-z])(?=.*[A-Z]).{6,}$/;
-    if (!passwordValidation.test(password)) {
-      return 'Password must contain at least 1 uppercase letter, 1 lowercase letter, and be at least 6 characters long.';
-    }
-    return '';
+  const onSubmit = (data) => {
+    createUser(data.email, data.password).then((result) => {
+      const loggedUser = result.user;
+      console.log(loggedUser);
+      updateUserProfile(data.name, data.photoURL)
+        .then(() => {
+          const userInfo = {
+            name: data.name,
+            email: data.email,
+          };
+          axiosPublic.post('/users', userInfo).then((res) => {
+            if (res.data.insertedId) {
+              reset();
+              Swal.fire({
+                position: 'top-end',
+                icon: 'success',
+                title: 'User created successfully.',
+                showConfirmButton: false,
+                timer: 1500,
+              });
+              Navigate('/');
+            }
+          });
+        })
+        .catch((error) => console.log(error));
+    });
   };
 
-  // Handle password change with validation
-  const handlePasswordChange = (e) => {
-    const value = e.target.value;
-    setPassword(value);
-    setError(validatePassword(value));
-  };
-
-  // Form submission handler
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-
-    if (error || !email || !password || !name || !photo) {
-      toast.error('Please check your inputs.', {
-        position: 'top-center',
-        autoClose: 5000,
-      });
-      return;
-    }
-
-    try {
-      setLoading(true);
-      const userCredential = await createUser(email, password);
-      const user = userCredential.user;
-
-      // Update user profile with display name and photo
-      await updateUserProfile(name, photo);
-
-      // Set user in context
-      setUser(user);
-
-      // Show success message and navigate
-      toast.success('Registration successful! Redirecting...', {
-        position: 'top-center',
-        autoClose: 3000,
-      });
-      navigate('/');
-    } catch (err) {
-      console.error('Signup error:', err.message);
-      const errorMessage =
-        err.code === 'auth/email-already-in-use'
-          ? 'Email is already in use. Please try another.'
-          : err.code === 'auth/invalid-email'
-          ? 'Invalid email format. Please check your email.'
-          : 'Failed to create account. Please try again.';
-      toast.error(errorMessage, {
-        position: 'top-center',
-        autoClose: 5000,
-      });
-    } finally {
-      setLoading(false);
-    }
-  };
+  const togglePasswordVisibility = () => setShowPassword((prev) => !prev);
 
   return (
-    <div className="h-full lg:min-h-screen bg-[#F7F8FA] flex justify-center items-center">
+    <>
       <Helmet>
-        <title>Edu-Track | Signup</title>
+        <title>Scholarship Management | Sign Up</title>
       </Helmet>
-      <div className="card bg-white shadow-sm w-full max-w-lg p-8 rounded-lg">
-        <div className="text-center mb-6">
-          <h2 className="text-2xl font-semibold mt-4 text-[#134479]">
-            Sign Up for Scholarship Portal
-          </h2>
-        </div>
-
-        <form onSubmit={handleSubmit} className="space-y-4">
-          {/* Full Name Field */}
-          <div className="form-control">
-            <label className="label">
-              <span className="label-text text-[#134479]">Full Name</span>
-            </label>
-            <input
-              type="text"
-              placeholder="Your Name"
-              className="input input-bordered"
-              value={name}
-              onChange={(e) => setName(e.target.value)}
-              required
-            />
+      <div className="h-full bg-[#F7F8FA] flex justify-center items-center py-4 lg:py-10">
+        <div className="card bg-white shadow-sm w-full max-w-md p-8 rounded-lg">
+          <div className="text-center mb-6">
+            <h2 className="text-2xl font-semibold mt-4">Create an Account</h2>
+            <p className="text-sm text-gray-500">
+              Join our community to manage scholarships!
+            </p>
           </div>
 
-          {/* Photo URL Field */}
-          <div className="form-control">
-            <label className="label">
-              <span className="label-text text-[#134479]">Photo URL</span>
-            </label>
-            <input
-              type="text"
-              placeholder="Photo URL"
-              className="input input-bordered"
-              value={photo}
-              onChange={(e) => setPhoto(e.target.value)}
-              required
-            />
+          {/* Google Sign-In Button */}
+          <div className="mt-6">
+            <SocialLogin></SocialLogin>
           </div>
 
-          {/* Email Field */}
-          <div className="form-control">
-            <label className="label">
-              <span className="label-text text-[#134479]">Email</span>
-            </label>
-            <input
-              type="email"
-              placeholder="e-mail@mail.com"
-              className="input input-bordered"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              required
-            />
+          {/* Separator */}
+          <div className="flex items-center my-4">
+            <hr className="w-full border-t border-gray-300" />
+            <span className="mx-2 text-gray-500">or</span>
+            <hr className="w-full border-t border-gray-300" />
           </div>
 
-          {/* Password Field */}
-          <div className="form-control">
-            <label className="label">
-              <span className="label-text text-[#134479]">Password</span>
-            </label>
-            <div className="relative">
+          {/* Signup Form */}
+          <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+            <div className="form-control">
+              <label className="label" htmlFor="name">
+                <span className="label-text">Full Name</span>
+              </label>
               <input
-                type={showPassword ? 'text' : 'password'}
-                placeholder="Password"
+                id="name"
+                type="text"
+                {...register('name', { required: true })}
+                placeholder="Enter your name"
                 className="input input-bordered w-full"
-                value={password}
-                onChange={handlePasswordChange}
                 required
               />
-              <span
-                onClick={() => setShowPassword(!showPassword)}
-                className="absolute right-3 top-1/2 transform -translate-y-1/2 cursor-pointer"
-              >
-                {showPassword ? <FaEyeSlash /> : <FaEye />}
-              </span>
+              {errors.name && (
+                <span className="text-red-600 text-sm">Name is required</span>
+              )}
             </div>
-            {error && <p className="text-red-500 text-sm mt-1">{error}</p>}
-          </div>
 
-          {/* Submit Button */}
-          <div className="form-control mt-6">
-            <button
-              type="submit"
-              className="btn bg-[#21B1E6] text-white hover:bg-[#1e9dcb] w-full"
-              disabled={loading || !!error}
-            >
-              {loading ? 'Registering...' : 'Sign Up'}
-            </button>
-          </div>
-        </form>
+            <div className="form-control">
+              <label className="label" htmlFor="photoURL">
+                <span className="label-text">Photo URL</span>
+              </label>
+              <input
+                id="photoURL"
+                type="text"
+                {...register('photoURL', { required: true })}
+                placeholder="Enter your photo URL"
+                className="input input-bordered w-full"
+                required
+              />
+              {errors.photoURL && (
+                <span className="text-red-600 text-sm">
+                  Photo URL is required
+                </span>
+              )}
+            </div>
 
-        <p className="text-center mt-4 font-semibold">
-          Already have an account?{' '}
-          <Link to="/login" className="text-[#21B1E6] hover:underline">
-            Log In
-          </Link>
-        </p>
+            <div className="form-control">
+              <label className="label" htmlFor="email">
+                <span className="label-text">Email Address</span>
+              </label>
+              <input
+                id="email"
+                type="email"
+                {...register('email', { required: true })}
+                placeholder="Enter your email"
+                className="input input-bordered w-full"
+                required
+              />
+              {errors.email && (
+                <span className="text-red-600 text-sm">Email is required</span>
+              )}
+            </div>
+
+            <div className="form-control">
+              <label className="label" htmlFor="password">
+                <span className="label-text">Password</span>
+              </label>
+              <div className="relative">
+                <input
+                  id="password"
+                  type={showPassword ? 'text' : 'password'}
+                  {...register('password', {
+                    required: true,
+                    minLength: 6,
+                    maxLength: 20,
+                    pattern: /(?=.*[A-Z])(?=.*[!@#$&*])(?=.*[0-9])(?=.*[a-z])/,
+                  })}
+                  placeholder="Enter your password"
+                  className="input input-bordered w-full"
+                  required
+                />
+                <span
+                  onClick={togglePasswordVisibility}
+                  className="absolute right-3 top-[33%] transform -translate-y-1/2 cursor-pointer"
+                >
+                  {showPassword ? <HiEyeOff size={24} /> : <HiEye size={24} />}
+                </span>
+                <label className="label">
+                  <a
+                    href="#"
+                    className="text-[#ec4899] label-text-alt link link-hover"
+                  >
+                    Forgot password?
+                  </a>
+                </label>
+              </div>
+              {errors.password && (
+                <span className="text-red-600 text-sm">
+                  Password is required
+                </span>
+              )}
+            </div>
+
+            <div className="form-control mt-6">
+              <button
+                type="submit"
+                className="btn bg-[#017F4E] text-white hover:bg-[#008D54] w-full"
+              >
+                Sign Up
+              </button>
+            </div>
+          </form>
+
+          <p className="text-center text-sm mt-4">
+            Already have an account?{' '}
+            <Link className="text-[#017F4E] hover:underline" to="/login">
+              Log In
+            </Link>
+          </p>
+        </div>
       </div>
-    </div>
+    </>
   );
 };
 
-export default Signup;
+export default SignUp;

@@ -4,7 +4,7 @@ import logo from '../../../assets/img/logo-white.png';
 
 const Footer = () => {
   return (
-    <footer className="bg-white dark:bg-gray-900">
+    <footer className="bg-white dark:bg-gray-900 mt-8">
       <div className="container p-6 mx-auto">
         <div className="lg:flex">
           {/* Logo and Subscribe Section */}
