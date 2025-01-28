@@ -1,18 +1,23 @@
 import { Elements } from '@stripe/react-stripe-js';
 import { loadStripe } from '@stripe/stripe-js';
-import SectionTitle from '../../components/Shared/SectionTitle';
+import { useLocation } from 'react-router-dom';
+import CheckOutForm from './CheckOutForm';
+
+// Load the Stripe publishable key from environment variables
+const stripePromise = loadStripe(import.meta.env.VITE_Payment_Gateway_PK);
 
 const Payments = () => {
-  const stripePromise = loadStripe(import.meta.env.VITE_Payment_Gateway_PK);
+  const location = useLocation();
+  const scholarshipData = location.state?.scholarship;
+  console.log(scholarshipData);
   return (
-    <div>
-      <SectionTitle
-        heading="Payment Page"
-        subHeading="Proceed with payment to apply for the scholarship."
-      ></SectionTitle>
-      <div>
+    <div className="min-h-screen bg-gray-50 flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
+      <div className="max-w-lg w-full bg-white p-8 rounded-lg shadow-lg">
+        <h1 className="text-center text-2xl font-semibold text-gray-800 mb-6">
+          Complete Your Payment
+        </h1>
         <Elements stripe={stripePromise}>
-          {/* <CheckOutForm></CheckoutForm> */}
+          <CheckOutForm scholarshipData={scholarshipData} />
         </Elements>
       </div>
     </div>
@@ -20,26 +25,3 @@ const Payments = () => {
 };
 
 export default Payments;
-
-//   return (
-//     <div className="container mx-auto p-6">
-//       <h2 className="text-2xl font-semibold">Payment Page</h2>
-//       <p className="mt-4">Proceed with payment to apply for the scholarship.</p>
-
-//       <button
-//         onClick={handlePayment}
-//         className="btn bg-[#ec4899] text-white hover:bg-[#f954a6] w-full mt-6"
-//       >
-//         Pay Application Fee
-//       </button>
-
-//       {paymentStatus && (
-//         <div className="mt-4">
-//           <p>Payment Successful!</p>
-//         </div>
-//       )}
-//     </div>
-//   );
-// };
-
-// export default Payments;

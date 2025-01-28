@@ -1,83 +1,67 @@
-import axios from 'axios';
-import React, { useState } from 'react';
+import { useForm } from 'react-hook-form';
 import { toast } from 'react-toastify';
+import Swal from 'sweetalert2';
+import useAxiosPublic from '../../../hooks/useAxiosPublic';
+import useAxiosSecure from '../../../hooks/useAxiosSecure';
 
 const image_hosting_key = import.meta.env.VITE_IMAGE_HOSTING_KEY;
 const image_hosting_api = `https://api.imgbb.com/1/upload?key=${image_hosting_key}`;
 
-const AddScholarship = () => {
-  const [formData, setFormData] = useState({
-    scholarshipName: '',
-    universityName: '',
-    universityImage: null,
-    universityCountry: '',
-    universityCity: '',
-    universityRank: '',
-    subjectCategory: 'Agriculture',
-    scholarshipCategory: 'Full fund',
-    degree: 'Diploma',
-    tuitionFees: '',
-    applicationFees: '',
-    serviceCharge: '',
-    applicationDeadline: '',
-    scholarshipPostDate: new Date().toISOString().split('T')[0],
-    postedUserEmail: '',
-  });
+const AddScholarship = ({ data }) => {
+  const axiosPublic = useAxiosPublic();
+  const axiosSecure = useAxiosSecure();
+  const {
+    register,
+    handleSubmit,
+    reset,
+    formState: { errors },
+  } = useForm();
 
-  const handleInputChange = (e) => {
-    const { name, value } = e.target;
-    setFormData({ ...formData, [name]: value });
-  };
-
-  const handleImageUpload = async (e) => {
-    const file = e.target.files[0];
-    if (!file) {
-      toast.error('Please select an image to upload.');
-      return;
-    }
-
-    const formData = new FormData();
-    formData.append('image', file);
-
+  const handleImageUpload = async (imageFile) => {
     try {
-      const response = await axios.post(image_hosting_api, formData);
-      const imageUrl = response.data.data.display_url;
-      setFormData((prev) => ({ ...prev, universityImage: imageUrl }));
-      toast.success('Image uploaded successfully.');
-    } catch (error) {
-      toast.error('Failed to upload image. Please try again.');
-    }
-  };
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-
-    if (!formData.universityImage) {
-      toast.error('Please upload the university image.');
-      return;
-    }
-
-    try {
-      await axios.post('/scholarships', formData); // Replace with your API endpoint
-      toast.success('Scholarship added successfully.');
-      setFormData({
-        scholarshipName: '',
-        universityName: '',
-        universityImage: null,
-        universityCountry: '',
-        universityCity: '',
-        universityRank: '',
-        subjectCategory: 'Agriculture',
-        scholarshipCategory: 'Full fund',
-        degree: 'Diploma',
-        tuitionFees: '',
-        applicationFees: '',
-        serviceCharge: '',
-        applicationDeadline: '',
-        scholarshipPostDate: new Date().toISOString().split('T')[0],
-        postedUserEmail: '',
+      const res = await axiosPublic.post(image_hosting_api, imageFile, {
+        headers: {
+          'content-type': 'multipart/form-data',
+        },
       });
+      return res.data.success ? res.data.data.url : null; // Return the image URL if successful
     } catch (error) {
+      console.error('Image upload failed:', error);
+      return null; // Return null if image upload fails
+    }
+  };
+
+  const onSubmit = async (formData) => {
+    console.log(formData);
+    // Upload image
+    const imageFile = { image: formData.image[0] };
+    const imageUrl = await handleImageUpload(imageFile);
+
+    if (!imageUrl) {
+      toast.error('Failed to upload image. Please try again.');
+      return;
+    }
+
+    // Prepare scholarship data
+    const scholarshipData = {
+      ...formData,
+      universityImage: imageUrl,
+    };
+
+    // Make the API call to add the scholarship
+    const res = await axiosSecure.post('/scholarships', scholarshipData);
+
+    if (res.status === 200 || res.status === 201) {
+      toast.success('Scholarship added successfully!');
+      reset(); // Reset form fields
+      Swal.fire({
+        position: 'top-center',
+        icon: 'success',
+        title: `${formData.scholarshipName} has been added.`,
+        showConfirmButton: false,
+        timer: 1500,
+      });
+    } else {
       toast.error('Failed to add scholarship. Please try again.');
     }
   };
@@ -85,191 +69,239 @@ const AddScholarship = () => {
   return (
     <div className="max-w-3xl mx-auto bg-white p-8 rounded-lg shadow">
       <h2 className="text-2xl font-bold mb-6">Add Scholarship</h2>
-      <form onSubmit={handleSubmit} className="space-y-4">
+      <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+        {/* Form Fields */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          {/* Scholarship Name */}
           <div>
             <label className="block text-sm font-medium mb-1">
               Scholarship Name
             </label>
             <input
               type="text"
-              name="scholarshipName"
-              value={formData.scholarshipName}
-              onChange={handleInputChange}
+              {...register('scholarshipName', {
+                required: 'This field is required.',
+              })}
               className="input input-bordered w-full"
-              required
             />
+            {errors.scholarshipName && (
+              <span className="text-red-500 text-sm">
+                {errors.scholarshipName.message}
+              </span>
+            )}
           </div>
+
+          {/* University Name */}
           <div>
             <label className="block text-sm font-medium mb-1">
               University Name
             </label>
             <input
               type="text"
-              name="universityName"
-              value={formData.universityName}
-              onChange={handleInputChange}
+              {...register('universityName', {
+                required: 'This field is required.',
+              })}
               className="input input-bordered w-full"
-              required
             />
+            {errors.universityName && (
+              <span className="text-red-500 text-sm">
+                {errors.universityName.message}
+              </span>
+            )}
           </div>
+
+          {/* University Image */}
           <div>
             <label className="block text-sm font-medium mb-1">
               University Image/Logo
             </label>
             <input
-              type="file"
               onChange={handleImageUpload}
+              type="file"
+              {...register('image')}
               className="file-input file-input-bordered w-full"
             />
+            {errors.image && (
+              <span className="text-red-500 text-sm">
+                {errors.image.message}
+              </span>
+            )}
           </div>
+
+          {/* University Country */}
           <div>
             <label className="block text-sm font-medium mb-1">
               University Country
             </label>
             <input
               type="text"
-              name="universityCountry"
-              value={formData.universityCountry}
-              onChange={handleInputChange}
+              {...register('universityCountry', {
+                required: 'This field is required.',
+              })}
               className="input input-bordered w-full"
-              required
             />
+            {errors.universityCountry && (
+              <span className="text-red-500 text-sm">
+                {errors.universityCountry.message}
+              </span>
+            )}
           </div>
+
+          {/* University City */}
           <div>
             <label className="block text-sm font-medium mb-1">
               University City
             </label>
             <input
               type="text"
-              name="universityCity"
-              value={formData.universityCity}
-              onChange={handleInputChange}
-              className="input input-bordered w-full"
-              required
-            />
-          </div>
-          <div>
-            <label className="block text-sm font-medium mb-1">
-              University World Rank
-            </label>
-            <input
-              type="number"
-              name="universityRank"
-              value={formData.universityRank}
-              onChange={handleInputChange}
+              {...register('universityCity', {
+                required: 'This field is required.',
+              })}
               className="input input-bordered w-full"
             />
+            {errors.universityCity && (
+              <span className="text-red-500 text-sm">
+                {errors.universityCity.message}
+              </span>
+            )}
           </div>
+
+          {/* Subject Category */}
           <div>
             <label className="block text-sm font-medium mb-1">
               Subject Category
             </label>
             <select
-              name="subjectCategory"
-              value={formData.subjectCategory}
-              onChange={handleInputChange}
+              {...register('subjectCategory')}
               className="select select-bordered w-full"
+              defaultValue="Agriculture"
             >
               <option>Agriculture</option>
               <option>Engineering</option>
               <option>Doctor</option>
             </select>
           </div>
+
+          {/* Scholarship Category */}
           <div>
             <label className="block text-sm font-medium mb-1">
               Scholarship Category
             </label>
             <select
-              name="scholarshipCategory"
-              value={formData.scholarshipCategory}
-              onChange={handleInputChange}
+              {...register('scholarshipCategory')}
               className="select select-bordered w-full"
+              defaultValue="Full fund"
             >
               <option>Full fund</option>
               <option>Partial</option>
               <option>Self-fund</option>
             </select>
           </div>
+
+          {/* Degree */}
           <div>
             <label className="block text-sm font-medium mb-1">Degree</label>
             <select
-              name="degree"
-              value={formData.degree}
-              onChange={handleInputChange}
+              {...register('degree')}
               className="select select-bordered w-full"
+              defaultValue="Diploma"
             >
               <option>Diploma</option>
               <option>Bachelor</option>
               <option>Masters</option>
             </select>
           </div>
+
+          {/* Tuition Fees */}
           <div>
             <label className="block text-sm font-medium mb-1">
               Tuition Fees (Optional)
             </label>
             <input
               type="number"
-              name="tuitionFees"
-              value={formData.tuitionFees}
-              onChange={handleInputChange}
+              {...register('tuitionFees')}
               className="input input-bordered w-full"
             />
           </div>
+
+          {/* Application Fees */}
           <div>
             <label className="block text-sm font-medium mb-1">
               Application Fees
             </label>
             <input
               type="number"
-              name="applicationFees"
-              value={formData.applicationFees}
-              onChange={handleInputChange}
+              {...register('applicationFees', {
+                required: 'This field is required.',
+              })}
               className="input input-bordered w-full"
-              required
             />
+            {errors.applicationFees && (
+              <span className="text-red-500 text-sm">
+                {errors.applicationFees.message}
+              </span>
+            )}
           </div>
+
+          {/* Service Charge */}
           <div>
             <label className="block text-sm font-medium mb-1">
               Service Charge
             </label>
             <input
               type="number"
-              name="serviceCharge"
-              value={formData.serviceCharge}
-              onChange={handleInputChange}
+              {...register('serviceCharge', {
+                required: 'This field is required.',
+              })}
               className="input input-bordered w-full"
-              required
             />
+            {errors.serviceCharge && (
+              <span className="text-red-500 text-sm">
+                {errors.serviceCharge.message}
+              </span>
+            )}
           </div>
+
+          {/* Application Deadline */}
           <div>
             <label className="block text-sm font-medium mb-1">
               Application Deadline
             </label>
             <input
               type="date"
-              name="applicationDeadline"
-              value={formData.applicationDeadline}
-              onChange={handleInputChange}
+              {...register('applicationDeadline', {
+                required: 'This field is required.',
+              })}
               className="input input-bordered w-full"
-              required
             />
+            {errors.applicationDeadline && (
+              <span className="text-red-500 text-sm">
+                {errors.applicationDeadline.message}
+              </span>
+            )}
           </div>
+
+          {/* Posted User Email */}
           <div>
             <label className="block text-sm font-medium mb-1">
               Posted User Email
             </label>
             <input
               type="email"
-              name="postedUserEmail"
-              value={formData.postedUserEmail}
-              onChange={handleInputChange}
+              {...register('postedUserEmail', {
+                required: 'This field is required.',
+              })}
               className="input input-bordered w-full"
-              required
             />
+            {errors.postedUserEmail && (
+              <span className="text-red-500 text-sm">
+                {errors.postedUserEmail.message}
+              </span>
+            )}
           </div>
         </div>
 
+        {/* Submit Button */}
         <button
           type="submit"
           className="btn bg-green-500 hover:bg-green-600 text-white mt-4 w-full"

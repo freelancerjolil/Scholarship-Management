@@ -1,109 +1,155 @@
-const CheckOutForm = () => {
+import { CardElement, useElements, useStripe } from '@stripe/react-stripe-js';
+import { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import Swal from 'sweetalert2';
+import useAuth from '../../hooks/useAuth';
+import useAxiosSecure from '../../hooks/useAxiosSecure';
+
+const CheckoutForm = ({ scholarshipData }) => {
+  const [paymentError, setPaymentError] = useState('');
+  const [clientSecret, setClientSecret] = useState('');
+  const [transactionId, setTransactionId] = useState('');
+  const [loading, setLoading] = useState(false);
+  const stripe = useStripe();
+  const elements = useElements();
+  const axiosSecure = useAxiosSecure();
+  const { user } = useAuth();
+  const navigate = useNavigate();
+
+  const applicationFee = parseFloat(scholarshipData?.applicationFees || 0);
+
+  useEffect(() => {
+    if (applicationFee > 0) {
+      axiosSecure
+        .post('/create-payment-intent', { price: applicationFee })
+        .then((res) => setClientSecret(res.data.clientSecret))
+        .catch(() => {
+          setPaymentError('Failed to create payment. Please try again.');
+        });
+    } else {
+      setPaymentError('Invalid application fee.');
+    }
+  }, [axiosSecure, applicationFee]);
+
   const handleSubmit = async (event) => {
     event.preventDefault();
 
     if (!stripe || !elements) {
+      setPaymentError('Stripe has not loaded yet.');
       return;
     }
 
-    const card = elements.getElement(CardElement);
+    setLoading(true);
+    const cardElement = elements.getElement(CardElement);
 
-    if (card === null) {
+    if (!cardElement) {
+      setPaymentError('Card details are required.');
+      setLoading(false);
       return;
     }
 
-    const { error, paymentMethod } = await stripe.createPaymentMethod({
-      type: 'card',
-      card,
-    });
-
-    if (error) {
-      console.log('payment error', error);
-      setError(error.message);
-    } else {
-      console.log('payment method', paymentMethod);
-      setError('');
-    }
-
-    // confirm payment
-    const { paymentIntent, error: confirmError } =
-      await stripe.confirmCardPayment(clientSecret, {
-        payment_method: {
-          card: card,
-          billing_details: {
-            email: user?.email || 'anonymous',
-            name: user?.displayName || 'anonymous',
+    try {
+      const { paymentIntent, error } = await stripe.confirmCardPayment(
+        clientSecret,
+        {
+          payment_method: {
+            card: cardElement,
+            billing_details: {
+              email: user?.email || 'anonymous',
+              name: user?.displayName || 'anonymous',
+            },
           },
-        },
-      });
+        }
+      );
 
-    if (confirmError) {
-      console.log('confirm error');
-    } else {
-      console.log('payment intent', paymentIntent);
+      if (error) {
+        setPaymentError(error.message);
+        setLoading(false);
+        return;
+      }
+
       if (paymentIntent.status === 'succeeded') {
-        console.log('transaction id', paymentIntent.id);
         setTransactionId(paymentIntent.id);
 
-        // now save the payment in the database
-        const payment = {
-          email: user.email,
-          price: totalPrice,
+        const paymentData = {
+          email: user?.email,
+          price: applicationFee,
           transactionId: paymentIntent.id,
-          date: new Date(), // utc date convert. use moment js to
-          cartIds: cart.map((item) => item._id),
-          menuItemIds: cart.map((item) => item.menuId),
-          status: 'pending',
+          scholarshipId: scholarshipData._id,
+          date: new Date(),
+          status: 'completed',
         };
 
-        const res = await axiosSecure.post('/payments', payment);
-        console.log('payment saved', res.data);
-        refetch();
-        if (res.data?.paymentResult?.insertedId) {
+        const res = await axiosSecure.post('/payments', paymentData);
+        if (res.data?.insertedId) {
           Swal.fire({
             position: 'top-end',
             icon: 'success',
-            title: 'Thank you for the taka paisa',
+            title: 'Payment Successful!',
             showConfirmButton: false,
             timer: 1500,
+          }).then(() => {
+            navigate(`/apply-scholarship/${scholarshipData._id}`);
           });
-          navigate('/dashboard/paymentHistory');
         }
       }
+    } catch {
+      setPaymentError('Payment failed. Please try again.');
+    } finally {
+      setLoading(false);
     }
   };
 
+  if (!scholarshipData) {
+    return <p className="text-red-600">Scholarship data is missing.</p>;
+  }
+
   return (
-    <form onSubmit={handleSubmit}>
-      <CardElement
-        options={{
-          style: {
-            base: {
-              fontSize: '16px',
-              color: '#424770',
-              '::placeholder': {
-                color: '#aab7c4',
+    <div className="max-w-lg mx-auto p-6 bg-white rounded-lg shadow-md">
+      <h2 className="text-xl font-semibold mb-4 text-center">
+        Checkout for {scholarshipData?.name}
+      </h2>
+      <form onSubmit={handleSubmit} className="space-y-4">
+        <div className="p-4 bg-gray-100 rounded border border-gray-300">
+          <CardElement
+            options={{
+              style: {
+                base: {
+                  fontSize: '16px',
+                  color: '#424770',
+                  '::placeholder': { color: '#aab7c4' },
+                },
+                invalid: { color: '#9e2146' },
               },
-            },
-            invalid: {
-              color: '#9e2146',
-            },
-          },
-        }}
-      />
-      <button
-        className="btn btn-sm btn-primary my-4"
-        type="submit"
-        disabled={!stripe || !clientSecret}
-      >
-        Pay
-      </button>
-      <p className="text-red-600">{error}</p>
-      {transactionId && (
-        <p className="text-green-600"> Your transaction id: {transactionId}</p>
-      )}
-    </form>
+            }}
+          />
+        </div>
+        <button
+          className={`btn btn-primary w-full ${loading ? 'opacity-50' : ''}`}
+          type="submit"
+          disabled={!stripe || !clientSecret || applicationFee <= 0 || loading}
+        >
+          {loading ? 'Processing...' : `Pay $${applicationFee.toFixed(2)}`}
+        </button>
+        {paymentError && (
+          <p
+            className="mt-2 text-red-600 bg-red-100 p-2 rounded text-center"
+            aria-live="assertive"
+          >
+            {paymentError}
+          </p>
+        )}
+        {transactionId && (
+          <p
+            className="mt-2 text-green-600 bg-green-100 p-2 rounded text-center"
+            aria-live="polite"
+          >
+            Payment successful! Transaction ID: {transactionId}
+          </p>
+        )}
+      </form>
+    </div>
   );
 };
 
-export default CheckOutForm;
+export default CheckoutForm;

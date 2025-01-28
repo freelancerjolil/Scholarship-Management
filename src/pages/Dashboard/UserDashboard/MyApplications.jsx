@@ -2,14 +2,12 @@ import { AiTwotoneDelete } from 'react-icons/ai';
 import { FaEdit } from 'react-icons/fa';
 import { FcViewDetails } from 'react-icons/fc';
 import { Link } from 'react-router-dom'; // Ensure you import Link from 'react-router-dom'
-import useAuth from '../../../hooks/useAuth';
 import useAxiosPublic from '../../../hooks/useAxiosPublic';
 import useScholarships from '../../../hooks/useScholarships';
 
 const MyApplications = () => {
-  const { user } = useAuth();
   const axiosPublic = useAxiosPublic();
-  const [applications, refetch] = useScholarships; // Ensure useApplication is set up correctly
+  const [applications, refetch] = useScholarships(); // Ensure useApplication is set up correctly
 
   // Handle delete action
   const handleDelete = async (_id) => {
