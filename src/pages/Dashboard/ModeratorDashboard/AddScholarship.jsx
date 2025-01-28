@@ -1,7 +1,7 @@
 const AddScholarship = () => {
   return (
     <div>
-      <h2>Thi is Modarator</h2>
+      <h2>Thi is Modarator Add</h2>
     </div>
   );
 };

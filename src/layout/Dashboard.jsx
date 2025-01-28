@@ -108,7 +108,7 @@ const Dashboard = () => {
             <>
               <li>
                 <NavLink
-                  to="/dashboard/myProfile"
+                  to="/dashboard/moderator-profile"
                   onClick={handleLinkClick}
                   className="flex items-center"
                 >
@@ -118,7 +118,7 @@ const Dashboard = () => {
               </li>
               <li>
                 <NavLink
-                  to="/dashboard/manageScholarships"
+                  to="/dashboard/manage-application"
                   onClick={handleLinkClick}
                   className="flex items-center"
                 >
@@ -128,7 +128,7 @@ const Dashboard = () => {
               </li>
               <li>
                 <NavLink
-                  to="/dashboard/allReviews"
+                  to="/dashboard/moderator/all-reviews"
                   onClick={handleLinkClick}
                   className="flex items-center"
                 >
@@ -138,7 +138,7 @@ const Dashboard = () => {
               </li>
               <li>
                 <NavLink
-                  to="/dashboard/allAppliedScholarship"
+                  to="/dashboard/applied-applications"
                   onClick={handleLinkClick}
                   className="flex items-center"
                 >
@@ -148,7 +148,7 @@ const Dashboard = () => {
               </li>
               <li>
                 <NavLink
-                  to="/dashboard/admin/add-scholarship"
+                  to="/dashboard/m/add-scholarship"
                   onClick={handleLinkClick}
                   className="flex items-center"
                 >

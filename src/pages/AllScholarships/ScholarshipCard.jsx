@@ -3,7 +3,6 @@ import { Link } from 'react-router-dom';
 
 const ScholarshipCard = ({ scholarship }) => {
   const {
-    _id,
     universityName,
     universityImage,
     scholarshipCategory,
