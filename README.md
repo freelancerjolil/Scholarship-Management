@@ -2,11 +2,11 @@
 
 > A React-based Scholarship-Management System
 >
-> #### Live Site URL: [Library Management ](https://edu-track-bc1d5.web.app)
+> #### Live Site URL: [Scholarship-Management ](https://edu-track-bc1d5.web.app)
 
 ## 📖 Introduction
 
-EduTrack Client is a front-end web application designed for educational tracking, leveraging modern web technologies such as React, Vite, TailwindCSS, and Firebase. It provides a seamless user experience with features like authentication, real-time updates, and responsive UI components.
+EduTrack Client is a front-end web application designed for Scholarshibg tracking, leveraging modern web technologies such as React, Vite, TailwindCSS, and Firebase. It provides a seamless user experience with features like authentication, real-time updates, and responsive UI components.
 
 ---
 
