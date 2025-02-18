@@ -24,6 +24,14 @@ EduTrack Client is a front-end web application designed for Scholarshibg trackin
 - [License](#license)
 ---
 
+## 🛠 Installation
+
+### Prerequisites
+
+- **Node.js** (>= 16.x recommended)
+- **npm** (>= 8.x recommended)
+
+
 ## ✨ Features
 
 | Feature                      | Description                                |
@@ -32,13 +40,13 @@ EduTrack Client is a front-end web application designed for Scholarshibg trackin
 | 🎨 **Styled UI**             | Powered by TailwindCSS and DaisyUI.      |
 | 🔥 **Firebase Integration**  | Authentication and backend services.           |
 | ⚡ **Optimized State Management**    | Uses React Query |
-| 🌟 **Stripe Integration**     | Secure payment processing `framer-motion`.           |
-| 📱 **Date Formatting **         | Managed with React Hook Form                  |
-| 🔔 **Smooth Animations**         | Enabled by Framer Motion `react-toastify`. |
+| 📝  **Form Handling**      | Managed with React Hook Form |
+| 💳 **Stripe Integration**     | Secure payment processing `framer-motion`.           |
+| 📅 **Date Formatting **         | Uses date-fns                  |
+| 🚀 **Smooth Animations**         | Enabled by Framer Motion `react-toastify`. |
 
 ---
-
-## 🛠 Installation
+### 🛠 Steps to Install
 
 ```sh
 # Clone the repository
