@@ -12,15 +12,16 @@ EduTrack Client is a front-end web application designed for Scholarshibg trackin
 
 ## 📌 Table of Contents
 
-- [📖 Introduction](#-introduction)
-- [✨ Features](#-features)
-- [🛠 Installation](#-installation)
-- [🚀 Usage](#-usage)
-- [⚙️ Configuration](#-configuration)
-- [📦 Dependencies](#-dependencies)
-- [👨‍💻 Development](#-development)
-- [📜 License](#-license)
-
+- [Installation](#installation)
+- [Usage](#usage)
+- [Features](#features)
+- [Dependencies](#dependencies)
+- [Development](#development)
+- [Configuration](#configuration)
+- [Project Structure](#project-structure)
+- [Troubleshooting](#troubleshooting)
+- [Contributing](#contributing)
+- [License](#license)
 ---
 
 ## ✨ Features
