@@ -51,6 +51,9 @@ const Navbar = () => {
           <NavLink to="/scholarships" className={getActiveLinkClass}>
             All Scholarships
           </NavLink>
+          <NavLink to="/contact" className={getActiveLinkClass}>
+            Contact Us
+          </NavLink>
           {user && (
             <NavLink to="/dashboard" className={getActiveLinkClass}>
               Dashboard
@@ -134,6 +137,15 @@ const Navbar = () => {
             >
               Scholarships
             </NavLink>
+
+            <NavLink
+              to="/contact"
+              className="block px-4 py-2 hover:text-primary"
+              onClick={() => setIsMenuOpen(false)}
+            >
+              Contact Us
+            </NavLink>
+
             {user && (
               <NavLink
                 to="/dashboard"
@@ -154,14 +166,14 @@ const Navbar = () => {
               <>
                 <Link
                   to="/login"
-                  className="block px-4 py-2 border border-primary text-primary rounded-lg hover:bg-primary hover:text-white"
+                  className="block px-4 py-2 border border-primary text-center text-primary rounded-lg hover:bg-primary hover:text-white"
                   onClick={() => setIsMenuOpen(false)}
                 >
                   Login
                 </Link>
                 <Link
                   to="/signup"
-                  className="block px-4 py-2 bg-primary text-white rounded-lg hover:bg-accent"
+                  className="block px-4 py-2 bg-primary text-white text-center rounded-lg hover:bg-accent"
                   onClick={() => setIsMenuOpen(false)}
                 >
                   Sign Up

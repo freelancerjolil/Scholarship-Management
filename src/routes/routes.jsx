@@ -12,6 +12,8 @@ import Signup from '../pages/Auth/Signup';
 import Home from '../pages/Home/Home';
 import Payments from '../pages/Payments/Payments';
 // Dashboard Pages
+import ErrorPage from '../components/ErrorPage';
+import AboutUs from '../components/Shared/MyProfile/ContactUs/AboutUs';
 import ContactUs from '../components/Shared/MyProfile/ContactUs/ContactUs';
 import AddScholarship from '../pages/Dashboard/AddScholarship.jsx/AddScholarship';
 import ManageApplications from '../pages/Dashboard/AdminDashboard/ManageApplications';
@@ -25,6 +27,8 @@ import MyReviews from '../pages/Dashboard/UserDashboard/MyReviews';
 import AdminRoute from './AdminRoute';
 import PrivateRoute from './PrivateRoute';
 
+// Import Error Page
+
 export const router = createBrowserRouter([
   // Main Layout Routes
   {
@@ -36,10 +40,17 @@ export const router = createBrowserRouter([
         path: '',
         element: <Home></Home>,
       },
-
       {
         path: 'scholarships',
         element: <AllScholarships></AllScholarships>,
+      },
+      {
+        path: 'contact',
+        element: <ContactUs></ContactUs>,
+      },
+      {
+        path: 'about',
+        element: <AboutUs></AboutUs>,
       },
       {
         path: 'scholarship/:id',
@@ -87,7 +98,6 @@ export const router = createBrowserRouter([
         index: true,
         element: <MyProfile></MyProfile>,
       },
-
       {
         path: 'contact',
         element: <ContactUs></ContactUs>,
@@ -158,6 +168,12 @@ export const router = createBrowserRouter([
         element: <ManageReviews></ManageReviews>,
       },
     ],
+  },
+
+  // Catch-all Error Page Route
+  {
+    path: '*',
+    element: <ErrorPage></ErrorPage>,
   },
 ]);
 
