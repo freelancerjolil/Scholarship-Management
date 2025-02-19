@@ -1,7 +1,7 @@
 const AboutThePlatform = () => {
   return (
     <div className="bg-[#F5F7FA] py-12">
-      <div className="max-w-7xl mx-auto px-6">
+      <div className="w-full mx-auto">
         {/* Heading */}
         <h2 className="text-3xl font-extrabold text-[#134479] text-center mb-8">
           About the Platform
@@ -9,12 +9,12 @@ const AboutThePlatform = () => {
 
         {/* Introduction */}
         <div className="bg-white shadow-xl rounded-lg p-8 mb-8">
-          <h3 className="text-2xl font-semibold text-[#0057D9] mb-4">
-            What is SMS?
+          <h3 className="text-2xl font-semibold text-center text-[#0057D9] mb-4">
+            What is Edu-Track?
           </h3>
           <p className="text-gray-600">
-            Our Scholarship Management System (SMS) helps students search and
-            apply for scholarships from a wide range of universities and
+            Our Scholarship Management System (Edu-Track) helps students search
+            and apply for scholarships from a wide range of universities and
             organizations. With an easy-to-use interface, students can manage
             their applications, track their progress, and access detailed
             scholarship information all in one place.
@@ -53,7 +53,7 @@ const AboutThePlatform = () => {
 
         {/* How It Works */}
         <div className="bg-white shadow-xl rounded-lg p-8 mb-8">
-          <h3 className="text-2xl font-semibold text-[#FEC900] mb-4">
+          <h3 className="text-2xl font-semibold text-center text-[#FEC900] mb-4">
             How It Works
           </h3>
           <div className="space-y-4">
