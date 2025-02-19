@@ -10,6 +10,7 @@ EduTrack Client is a front-end web application designed for Scholarshibg trackin
 
 ---
 
+
 ## 📌 Table of Contents
 
 - [Installation](#installation)
@@ -22,7 +23,6 @@ EduTrack Client is a front-end web application designed for Scholarshibg trackin
 - [Troubleshooting](#troubleshooting)
 - [Contributing](#contributing)
 - [License](#license)
----
 
 ## 🛠 Installation
 
@@ -41,7 +41,7 @@ EduTrack Client is a front-end web application designed for Scholarshibg trackin
 | 🔥 **Firebase Integration**  | Authentication and backend services.           |
 | ⚡ **Optimized State Management**    | Uses React Query |
 | 📝  **Form Handling**      | Managed with React Hook Form |
-| 💳 **Stripe Integration**     | Secure payment processing `framer-motion`.           |
+| 💳 **Stripe Integration**     | Secure payment processing `framer-motion`.|
 | 📅 **Date Formatting **         | Uses date-fns                  |
 | 🚀 **Smooth Animations**         | Enabled by Framer Motion `react-toastify`. |
 
