@@ -98,29 +98,6 @@ const AboutUs = () => {
             </p>
           </div>
         </div>
-
-        {/* Custom Features Section */}
-        <div className="mt-12">
-          <h2 className="text-2xl font-semibold text-primary mb-4">
-            Our Custom Features
-          </h2>
-          <div className="grid md:grid-cols-3 gap-6">
-            {Array.from({ length: 12 }, (_, index) => (
-              <div
-                key={index}
-                className="p-6 bg-white rounded-2xl shadow-lg text-center"
-              >
-                <h3 className="text-xl font-semibold text-secondary">
-                  Feature {index + 1}
-                </h3>
-                <p className="text-gray-700 mt-2">
-                  Description of feature {index + 1} explaining its benefits and
-                  functionality.
-                </p>
-              </div>
-            ))}
-          </div>
-        </div>
       </div>
     </div>
   );

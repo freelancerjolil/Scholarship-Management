@@ -1,4 +1,5 @@
 import { useContext } from 'react';
+import avatarImg from '../../../assets/img/placeholder.jpg';
 import { AuthContext } from '../../../providers/AuthProvider';
 import LoadingSpinner from '../../LoadingSpinner';
 
@@ -8,7 +9,7 @@ const MyProfile = () => {
   if (!user) {
     return (
       <div className="flex justify-center items-center h-screen">
-        <LoadingSpinner></LoadingSpinner>
+        <LoadingSpinner />
       </div>
     );
   }
@@ -18,9 +19,9 @@ const MyProfile = () => {
       <div className="card bg-white shadow-lg w-full max-w-md p-10 rounded-xl border border-gray-300">
         <div className="text-center mb-6">
           <img
-            src={user.photoURL || 'https://via.placeholder.com/150'}
+            src={user.photoURL || avatarImg}
             alt="User Avatar"
-            className="w-24 h-24 rounded-full mx-auto mb-4"
+            className="w-24 h-24 rounded-full mx-auto mb-4 object-cover border border-gray-300"
           />
           <h2 className="text-2xl font-bold text-[#134479]">
             {user.displayName || 'Anonymous User'}
@@ -33,7 +34,7 @@ const MyProfile = () => {
         <div className="mt-6 space-y-4">
           <div className="flex justify-between items-center">
             <span className="text-gray-600 font-medium">Email:</span>
-            <span className="text-gray-800">{user.email}</span>
+            <span className="text-gray-800">{user.email || 'N/A'}</span>
           </div>
           {user.role && (
             <div className="flex justify-between items-center">
@@ -44,7 +45,9 @@ const MyProfile = () => {
           <div className="flex justify-between items-center">
             <span className="text-gray-600 font-medium">Member Since:</span>
             <span className="text-gray-800">
-              {new Date(user.metadata.creationTime).toLocaleDateString()}
+              {user.metadata?.creationTime
+                ? new Date(user.metadata.creationTime).toLocaleDateString()
+                : 'N/A'}
             </span>
           </div>
         </div>

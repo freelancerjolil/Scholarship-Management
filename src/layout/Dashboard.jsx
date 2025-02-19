@@ -19,22 +19,105 @@ const Dashboard = () => {
   const [isModerator] = useModerator();
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
-  // Toggle Sidebar Visibility
+  // Toggle Sidebar
   const toggleSidebar = () => setSidebarOpen(!sidebarOpen);
 
-  // Close Sidebar on Mobile after Link Click
-  const handleLinkClick = () => {
-    if (sidebarOpen) setSidebarOpen(false);
-  };
+  // Close Sidebar on Mobile after Clicking a Link
+  const handleLinkClick = () => sidebarOpen && setSidebarOpen(false);
+
+  // Sidebar Menu Items
+  const sidebarItems = [
+    ...(isAdmin
+      ? [
+          {
+            path: '/dashboard/admin-home',
+            icon: <FaHome />,
+            label: 'Admin Profile',
+          },
+          {
+            path: '/dashboard/add-scholarship',
+            icon: <FaPlusCircle />,
+            label: 'Add Scholarship',
+          },
+          {
+            path: '/dashboard/manage-application',
+            icon: <FaClipboardList />,
+            label: 'Manage Applications',
+          },
+          {
+            path: '/dashboard/admin/users',
+            icon: <FaUserFriends />,
+            label: 'Manage Users',
+          },
+          {
+            path: '/dashboard/manage-review',
+            icon: <FaClipboardList />,
+            label: 'Manage Reviews',
+          },
+        ]
+      : isModerator
+      ? [
+          {
+            path: '/dashboard/moderator-profile',
+            icon: <FaHome />,
+            label: 'My Profile',
+          },
+          {
+            path: '/dashboard/manage-application',
+            icon: <FaClipboardList />,
+            label: 'Manage Scholarships',
+          },
+          {
+            path: '/dashboard/moderator/all-reviews',
+            icon: <FaClipboardList />,
+            label: 'All Reviews',
+          },
+          {
+            path: '/dashboard/applied-applications',
+            icon: <FaClipboardList />,
+            label: 'All Applied Scholarships',
+          },
+          {
+            path: '/dashboard/m/add-scholarship',
+            icon: <FaPlusCircle />,
+            label: 'Add Scholarship',
+          },
+        ]
+      : [
+          {
+            path: '/dashboard/my-profile',
+            icon: <FaHome />,
+            label: 'My Profile',
+          },
+          {
+            path: '/dashboard/my-applications',
+            icon: <FaCheckCircle />,
+            label: 'My Applications',
+          },
+          {
+            path: '/dashboard/my-reviews',
+            icon: <FaUserGraduate />,
+            label: 'My Reviews',
+          },
+        ]),
+    { path: '/', icon: <FaHome />, label: 'Home' },
+    {
+      path: '/scholarships',
+      icon: <FaClipboardList />,
+      label: 'Browse Scholarships',
+    },
+    { path: '/dashboard/contact', icon: <FaEnvelope />, label: 'Contact Us' },
+  ];
 
   return (
     <div className="flex h-screen overflow-hidden">
       {/* Sidebar */}
-      <div
-        className={`fixed inset-y-0 left-0 z-30 w-64 bg-green-600 text-white transform ${
+      <aside
+        className={`fixed inset-y-0 left-0 z-40 w-64 bg-primary text-white transform ${
           sidebarOpen ? 'translate-x-0' : '-translate-x-full'
-        } transition-transform duration-300 lg:translate-x-0 lg:relative lg:flex lg:flex-col`}
+        } transition-transform duration-300 lg:translate-x-0 lg:relative`}
       >
+        {/* Sidebar Header (Mobile) */}
         <div className="flex items-center justify-between px-4 py-4 lg:hidden">
           <h1 className="text-lg font-bold">Dashboard</h1>
           <button
@@ -46,203 +129,37 @@ const Dashboard = () => {
           </button>
         </div>
 
-        <ul className="menu p-4">
-          {/* Admin Links */}
-          {isAdmin && (
-            <>
-              <li>
-                <NavLink
-                  to="/dashboard/admin-home"
-                  onClick={handleLinkClick}
-                  className="flex items-center"
-                >
-                  <FaHome className="mr-2" />
-                  Admin Profile
-                </NavLink>
-              </li>
-              <li>
-                <NavLink
-                  to="/dashboard/add-scholarship"
-                  onClick={handleLinkClick}
-                  className="flex items-center"
-                >
-                  <FaPlusCircle className="mr-2" />
-                  Add Scholarship
-                </NavLink>
-              </li>
-              <li>
-                <NavLink
-                  to="/dashboard/manage-application"
-                  onClick={handleLinkClick}
-                  className="flex items-center"
-                >
-                  <FaClipboardList className="mr-2" />
-                  Manage Applications
-                </NavLink>
-              </li>
-              <li>
-                <NavLink
-                  to="/dashboard/admin/users"
-                  onClick={handleLinkClick}
-                  className="flex items-center"
-                >
-                  <FaUserFriends className="mr-2" />
-                  Manage Users
-                </NavLink>
-              </li>
-              <li>
-                <NavLink
-                  to="/dashboard/manage-review"
-                  onClick={handleLinkClick}
-                  className="flex items-center"
-                >
-                  <FaClipboardList className="mr-2" />
-                  Manage Review
-                </NavLink>
-              </li>
-            </>
-          )}
-
-          {/* Moderator Links */}
-          {isModerator && (
-            <>
-              <li>
-                <NavLink
-                  to="/dashboard/moderator-profile"
-                  onClick={handleLinkClick}
-                  className="flex items-center"
-                >
-                  <FaHome className="mr-2" />
-                  My Profile
-                </NavLink>
-              </li>
-              <li>
-                <NavLink
-                  to="/dashboard/manage-application"
-                  onClick={handleLinkClick}
-                  className="flex items-center"
-                >
-                  <FaClipboardList className="mr-2" />
-                  Manage Scholarships
-                </NavLink>
-              </li>
-              <li>
-                <NavLink
-                  to="/dashboard/moderator/all-reviews"
-                  onClick={handleLinkClick}
-                  className="flex items-center"
-                >
-                  <FaClipboardList className="mr-2" />
-                  All Reviews
-                </NavLink>
-              </li>
-              <li>
-                <NavLink
-                  to="/dashboard/applied-applications"
-                  onClick={handleLinkClick}
-                  className="flex items-center"
-                >
-                  <FaClipboardList className="mr-2" />
-                  All Applied Scholarships
-                </NavLink>
-              </li>
-              <li>
-                <NavLink
-                  to="/dashboard/m/add-scholarship"
-                  onClick={handleLinkClick}
-                  className="flex items-center"
-                >
-                  <FaPlusCircle className="mr-2" />
-                  Add Scholarship
-                </NavLink>
-              </li>
-            </>
-          )}
-
-          {/* User Links */}
-          {!isAdmin && !isModerator && (
-            <>
-              <li>
-                <NavLink
-                  to="/dashboard/my-profile"
-                  onClick={handleLinkClick}
-                  className="flex items-center"
-                >
-                  <FaHome className="mr-2" />
-                  My Profile
-                </NavLink>
-              </li>
-              <li>
-                <NavLink
-                  to="/dashboard/my-applications"
-                  onClick={handleLinkClick}
-                  className="flex items-center"
-                >
-                  <FaCheckCircle className="mr-2" />
-                  My Application
-                </NavLink>
-              </li>
-              <li>
-                <NavLink
-                  to="/dashboard/my-reviews"
-                  onClick={handleLinkClick}
-                  className="flex items-center"
-                >
-                  <FaUserGraduate className="mr-2" />
-                  My Reviews
-                </NavLink>
-              </li>
-            </>
-          )}
-
-          {/* Shared Links */}
-          <div className="divider my-4 border-t border-white opacity-50" />
-          <li>
-            <NavLink
-              to="/"
-              onClick={handleLinkClick}
-              className="flex items-center"
-            >
-              <FaHome className="mr-2" />
-              Home
-            </NavLink>
-          </li>
-          <li>
-            <NavLink
-              to="/scholarships"
-              onClick={handleLinkClick}
-              className="flex items-center"
-            >
-              <FaClipboardList className="mr-2" />
-              Browse Scholarships
-            </NavLink>
-          </li>
-          <li>
-            <NavLink
-              to="/dashboard/contact"
-              onClick={handleLinkClick}
-              className="flex items-center"
-            >
-              <FaEnvelope className="mr-2" />
-              Contact Us
-            </NavLink>
-          </li>
+        {/* Sidebar Menu */}
+        <ul className="p-4 space-y-2">
+          {sidebarItems.map(({ path, icon, label }) => (
+            <li key={path}>
+              <NavLink
+                to={path}
+                onClick={handleLinkClick}
+                className="flex items-center gap-2 p-2 rounded-lg transition-colors hover:bg-accent"
+              >
+                {icon}
+                {label}
+              </NavLink>
+            </li>
+          ))}
         </ul>
-      </div>
+      </aside>
 
       {/* Main Content */}
       <div className="flex-1 flex flex-col">
-        {/* Top Navbar */}
-        <div className="bg-green-600 text-white px-4 py-3 flex items-center justify-between lg:hidden">
+        {/* Top Navbar (Mobile) */}
+        <header className="bg-primary text-white px-4 py-3 flex items-center justify-between lg:hidden">
           <button onClick={toggleSidebar} aria-label="Open Sidebar">
             <FaBars size={20} />
           </button>
           <h1 className="text-lg font-bold">Dashboard</h1>
-        </div>
+        </header>
 
-        <div className="flex-1 p-6 bg-gray-100">
+        {/* Page Content */}
+        <main className="flex-1 p-6 bg-background">
           <Outlet />
-        </div>
+        </main>
       </div>
     </div>
   );
